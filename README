@@ -1,0 +1,22 @@
+
+Matahari is a system for gaming the popular twitter game playspymaster.com
+
+It doesn't do any "cheating" per se, rather it spares you the dreary task of going to the site, waiting for your energy to come back up and clicking the perform task button. It automatically performs the last (and best) task for you.
+
+To configure:
+ Just put your twitter username and password in config.yml
+
+To run:
+  ruby -rubygems matahari.rb
+
+Depends on:
+ gem install tenderlove-mechanize --source=http://gems.github.com
+ 
+Yup, playspymaster does use some hacks to prevent such gaming but nobody's better than Mata Hari when it comes to seduction.
+
+Enjoy,
+Vishnu Gopal
+May 2009.
+
+---
+  This code is hereby released to the Public Domain. Do what you will!

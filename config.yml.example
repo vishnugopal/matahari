@@ -1,0 +1,13 @@
+
+debug_mode: true
+
+twitter:
+  username: 'demo'
+  password: 'demo'
+
+spymaster:  
+  urls:
+    prefix: "http://playspymaster.com"
+    home: "/"
+    tasks: "/tasks"
+    tasks_perform: "/tasks/perform"
