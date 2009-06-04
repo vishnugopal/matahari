@@ -62,7 +62,7 @@ class MataHari
     out "Required energy for task: #{required_energy}"
     
     if task_name == '' || required_energy == 0
-      out "No task to perform (energy is probably not enough!)"
+      out "Energy's not enough to perform task!"
     else
       task_number = current_energy / required_energy
       out "Sufficient energy found to perform task #{task_number} time(s)."
