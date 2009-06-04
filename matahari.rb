@@ -64,11 +64,15 @@ class MataHari
     if task_name == ''
       out "No task to perform (energy is probably not enough!)"
     else
-      out "Sufficient energy found, performing task..."
-      page = agent.post(spymaster_url_for('tasks_perform'), 
-              { 'task' => task_name,  
-                'authenticity_token' => auth_token, 
-                'time' => '700' })
+      task_number = current_energy / required_energy
+      out "Sufficient energy found to perform task #{task_number} times."
+      task_number.times do
+        out "Performing task..."
+        page = agent.post(spymaster_url_for('tasks_perform'), 
+                { 'task' => task_name,  
+                  'authenticity_token' => auth_token, 
+                  'time' => '700' })
+      end
       out "Done, coolio!"
     end
     
