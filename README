@@ -11,8 +11,12 @@ To run:
 
 Depends on:
  gem install tenderlove-mechanize --source=http://gems.github.com
+ gem install entangledstate-ruby-hmac  --source=http://gems.github.com
  
 Yup, playspymaster does use some hacks to prevent such gaming but nobody's better than Mata Hari when it comes to seduction.
+
+Changes:
+  Jun 6 2009: Matahari now defeats the "cryptic" encryption employed by the Directorate.
 
 Enjoy,
 Vishnu Gopal

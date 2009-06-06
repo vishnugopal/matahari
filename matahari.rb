@@ -1,15 +1,20 @@
 
 #Add lib/ to path
-curr_path = File.dirname(__FILE__)
-$:.unshift("#{curr_path}/lib")
+$curr_path = File.dirname(__FILE__)
+$:.unshift("#{$curr_path}/lib")
 
 require 'mechanize'
 require 'yaml'
 require 'debuggable'
+require 'cryptic'
+require 'open-uri'
+require 'mechanize_extensions'
+require 'logger'
+
 
 class MataHari
   
-  attr_accessor :options, :agent
+  attr_accessor :options, :agent, :simplekey, :ticks
   
   include Debuggable
   
@@ -17,13 +22,23 @@ class MataHari
     self.options = options
     self.debug_mode = options['debug_mode'] || false
     self.agent = WWW::Mechanize.new
+    self.agent.log = Logger.new("#{$curr_path}/#{options['raw_log']}") if options['debug_mode']
     
     connect_spymaster_to_twitter
     out "Starting seduction..."
     
+    self.simplekey = load_simplekey
+    self.ticks = 10    
+    
     loop do
       sleep seduce_the_spymaster
     end
+  end
+  
+  def load_simplekey
+    simplekey = open(spymaster_url_for("simplekey")).read
+    out "Found simplekey as: #{simplekey}"
+    simplekey
   end
   
   def connect_spymaster_to_twitter
@@ -33,6 +48,12 @@ class MataHari
     
     # At the twitter form stage, let's fill in our credentials & submit
     login_form = page.forms[0]
+    
+    unless login_form
+      out "Can't reach twitter (site possibly overloaded), exiting!"
+      exit
+    end
+    
     login_form.field_with(:name => 'session[username_or_email]').value = options['twitter']['username']
     login_form.field_with(:name => 'session[password]').value = options['twitter']['password']
     page = agent.submit(login_form, login_form.buttons[1])
@@ -62,18 +83,23 @@ class MataHari
     out "Required energy for task: #{required_energy}"
     
     if task_name == '' || required_energy == 0
-      out "Energy's not enough to perform task!"
+      out "Sufficient energy not found to perform task, waiting!"
     else
       task_number = current_energy / required_energy
       out "Sufficient energy found to perform task #{task_number} time(s)."
       task_number.times do
         out "Performing task..."
-        page = agent.post(spymaster_url_for('tasks_perform'), 
+        signature = Cryptic.hash(simplekey, 
+                      options['spymaster']['urls']['tasks_perform'], auth_token, ticks)
+        out "signature is: #{signature} ticks #{ticks} task #{task_name} auth token #{auth_token}"
+        page = agent.post_with_headers(spymaster_url_for('tasks_perform'), 
                 { 'task' => task_name,  
                   'authenticity_token' => auth_token, 
-                  'time' => '700' })
+                  'ticks' => ticks, 
+                  'ch' => signature },
+                  {'X-Requested-With' => 'XMLHttpRequest'})
       end
-      out "Done, coolio!"
+      out "Done, coolio, waiting now!"
     end
     
     refresh_in

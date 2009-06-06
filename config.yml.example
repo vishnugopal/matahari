@@ -1,5 +1,6 @@
 
 debug_mode: true
+raw_log: 'matahari.log'
 
 twitter:
   username: 'demo'
@@ -11,3 +12,5 @@ spymaster:
     home: "/"
     tasks: "/tasks"
     tasks_perform: "/tasks/perform"
+    simplekey: "/simplekey"
+    
