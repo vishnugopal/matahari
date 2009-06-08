@@ -33,6 +33,8 @@ class MataHari
     loop do
       sleep seduce_the_spymaster
     end
+  rescue WWW::Mechanize::ResponseCodeError => e
+    out "Mechanize error: #{e.inspect}, exiting!"
   end
   
   def load_simplekey
@@ -46,11 +48,16 @@ class MataHari
     page = agent.get(spymaster_url_for('home'))
     page = agent.click page.links_with(:text => "Start playing Spymaster now.")[0]
     
+    twitter_url = page.body.to_s.match(/url=(.*)">/)[1]
+    out "Getting twitter URL as #{twitter_url}"
+    page = agent.get(:url => twitter_url, :referer => spymaster_url_for('home'))
+    
     # At the twitter form stage, let's fill in our credentials & submit
     login_form = page.forms[0]
     
     unless login_form
       out "Can't reach twitter (site possibly overloaded), exiting!"
+      out page.body.to_s
       exit
     end
     
