@@ -84,11 +84,13 @@ class MataHari
     auth_token = page.body.to_s.match(/AUTH_TOKEN = "(.*)"/)[1]    
     current_energy = page.search('li#mini-dashboard-energy span.value').inner_html.to_i
     current_health = page.search('li#mini-dashboard-health span.value').inner_html.to_i
+    current_money = page.search('li#mini-dashboard-wallet span.amount').attr("raw").to_s.gsub(",", "").to_i
     refresh_in = 0
     
     out "Auth token is: #{auth_token}"
     out "Current energy: #{current_energy}"
     out "Current health: #{current_health}"
+    out "Current money: #{current_money}"
     out "Refresh in: #{refresh_in}"
     
     page.search('li#mini-dashboard-timer span.vitals-refresh').inner_html.to_s.split(':').tap do 
@@ -97,7 +99,8 @@ class MataHari
     
     if current_health < options['spymaster']['minimum_health']
       out "Health #{current_health} is lower than minimum_health value #{options['spymaster']['minimum_health']}"
-      out "Assassination is not healthy at this time, waiting #{refresh_in}s."
+      out "Assassination is not healthy at this time, trying seduction..."
+      seduce_the_spymaster
       return refresh_in
     end
     
@@ -165,6 +168,17 @@ class MataHari
                 'authenticity_token' => auth_token
               },
               {'X-Requested-With' => 'XMLHttpRequest'})
+    end
+    
+    # Deposit money into Swiss Bank
+    if current_money > options['spymaster']['minimum_depost']
+      out "Depositing money in Swiss bank to keep it safe..."
+      page = agent.post_with_headers(spymaster_url_for('swiss_bank_deposit'), 
+              { 'amount' => "#{current_money}",  
+                'authenticity_token' => auth_token
+              },
+              {'X-Requested-With' => 'XMLHttpRequest'})
+      out "Done!"
     end
     
     5

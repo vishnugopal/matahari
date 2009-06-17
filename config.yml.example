@@ -8,6 +8,7 @@ twitter:
 
 spymaster:  
   minimum_health: 100
+  minimum_depost: 7360
   urls:
     prefix: "http://playspymaster.com"
     home: "/"
@@ -15,6 +16,8 @@ spymaster:
     assassination_execute: "/assassination/execute"
     assassination_results: "/assassination/results"
     black_market_sell_item: "/black_market/sell_item"
+    swiss_bank: "/swiss_bank"
+    swiss_bank_deposit: "/swiss_bank/deposit"
     tasks: "/tasks"
     tasks_perform: "/tasks/perform"
     simplekey: "/simplekey"
