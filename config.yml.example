@@ -7,9 +7,14 @@ twitter:
   password: 'demo'
 
 spymaster:  
+  minimum_health: 100
   urls:
     prefix: "http://playspymaster.com"
     home: "/"
+    assassination: "/assassination"
+    assassination_execute: "/assassination/execute"
+    assassination_results: "/assassination/results"
+    black_market_sell_item: "/black_market/sell_item"
     tasks: "/tasks"
     tasks_perform: "/tasks/perform"
     simplekey: "/simplekey"
